@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.1">
+    <persistence-unit name="mycnx" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+
+        <!--   pour utiliser le datasource de WildFly -->
+        <jta-data-source>java:jboss/datasources/atelier3DS</jta-data-source>
+
+
+        <!-- classes -->
+        <class>ma.fstt.atelier3.model.Internaute</class>
+        <class>ma.fstt.atelier3.model.Commande</class>
+        <class>ma.fstt.atelier3.model.LigneCommande</class>
+        <class>ma.fstt.atelier3.model.Panier</class>
+        <class>ma.fstt.atelier3.model.LignePanier</class>
+        <class>ma.fstt.atelier3.model.Produit</class>
+
+        <properties>
+            <!-- Hibernate as JPA provider -->
+            <property name="hibernate.archive.autodetection" value="class"/>
+
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:4306/atelier3?useSSL=false&amp;serverTimezone=UTC"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!-- Enable DDL Generation -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>  <!-- Options: create, create-drop, update, validate -->
+
+            <!-- Optional: Show SQL statements in console (for debugging) -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+
+            <!-- Optional: Log generated DDL to console/file -->
+            <property name="hibernate.hbm2ddl.import_files" value="import.sql"/>  <!-- If you have custom init scripts -->
+        </properties>
+
+    </persistence-unit>
+</persistence>
