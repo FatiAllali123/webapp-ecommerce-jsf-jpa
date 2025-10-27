@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Détails Commande #{commandeBean.selectedCommande.id}</title>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+
+        .details-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .page-header {
+            text-align: center;
+
+            animation: fadeInDown 0.6s ease;
+        }
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-title i {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        /* Panel Styles */
+        .ui-panel {
+            border: none !important;
+            border-radius: 20px !important;
+            box-shadow: 0 15px 40px rgba(156, 39, 176, 0.15) !important;
+            background: white !important;
+            overflow: hidden !important;
+            animation: fadeInUp 0.7s ease;
+        }
+
+        .ui-panel .ui-panel-titlebar {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.5rem 2rem !important;
+            font-weight: 700 !important;
+            font-size: 1.4rem !important;
+            border-radius: 0 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .ui-panel .ui-panel-content {
+            padding: 2.5rem !important;
+            background: white !important;
+        }
+        /* PanelGrid Info Section */
+        .ui-panelgrid {
+            width: 100% !important;
+            border: none !important;
+            background: #f8f9fa !important;
+            border-radius: 15px !important;
+            padding: 1.5rem !important;
+            margin-bottom: 2rem !important;
+        }
+
+        .ui-panelgrid tr {
+            border: none !important;
+        }
+
+        .ui-panelgrid td {
+            padding: 1rem !important;
+            border: none !important;
+        }
+
+        .ui-panelgrid .ui-outputlabel {
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+            font-size: 1.05rem !important;
+        }
+
+        .montant-total {
+            font-weight: 800 !important;
+            color: #A328B8 !important;
+            font-size: 1.3rem !important;
+        }
+
+        /* DataTable Styles */
+        .ui-datatable {
+            border: none !important;
+            border-radius: 15px !important;
+            overflow: hidden !important;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08) !important;
+            margin-top: 2rem !important;
+        }
+
+        .ui-datatable thead th {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.2rem 1rem !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            font-size: 1rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .ui-datatable tbody td {
+            padding: 1.2rem 1rem !important;
+            border-bottom: 1px solid #e9ecef !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            color: #2c3e50 !important;
+            font-size: 0.95rem !important;
+        }
+
+        .ui-datatable tbody tr {
+            transition: all 0.3s ease !important;
+            background: white !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even) {
+            background: #fafbfc !important;
+        }
+
+        .ui-datatable tbody tr:hover {
+            background: #f8f4fb !important;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.1) !important;
+        }
+
+        /* Product Image */
+        .product-image {
+            border-radius: 10px !important;
+            object-fit: cover !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+            transition: transform 0.3s ease !important;
+        }
+
+        .product-image:hover {
+            transform: scale(1.1) !important;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid #A328B8;
+            margin: 1rem 0;
+        }
+
+        .info-card strong {
+            color: #9c27b0;
+            font-weight: 700;
+        }
+
+        .info-card small {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Button Styles */
+        .ui-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 0.9rem 2rem !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.3) !important;
+            margin-top: 2rem !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.6rem !important;
+        }
+
+        .ui-button:hover {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.4) !important;
+        }
+
+        .ui-button i {
+            font-size: 1.1rem;
+        }
+
+        /* Price Highlights */
+        .price-cell {
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+        }
+
+        .subtotal-cell {
+            font-weight: 800 !important;
+            color: #A328B8 !important;
+            font-size: 1.05rem !important;
+        }
+
+        /* Section Headers */
+        .section-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #A328B8;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-header i {
+            color: #9c27b0;
+        }
+
+        /* Badge Styles */
+        .order-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                flex-direction: column;
+            }
+
+            .ui-panel .ui-panel-content {
+                padding: 1.5rem !important;
+            }
+
+            .ui-panelgrid {
+                padding: 1rem !important;
+            }
+
+            .ui-datatable tbody td,
+            .ui-datatable thead th {
+                padding: 0.8rem 0.5rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .product-image {
+                width: 50px !important;
+                height: 50px !important;
+            }
+        }
+
+        /* Empty Message */
+        .ui-datatable-empty-message {
+            text-align: center !important;
+            padding: 3rem !important;
+            color: #6c757d !important;
+            font-size: 1.1rem !important;
+            font-style: italic;
+        }
+
+        /* Client Info Styling */
+        .client-info {
+            background: linear-gradient(135deg, #f8f4fb 0%, #f0e6f5 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #9c27b0;
+        }
+
+        .client-info strong {
+            color: #6a1b9a;
+            font-size: 1.05rem;
+        }
+
+        .client-info small {
+            color: #6c757d;
+            display: block;
+            margin-top: 0.3rem;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclure la navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <div class="details-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-receipt"></i>
+                Détails de la Commande
+            </h1>
+            <p class="page-subtitle">
+                Commande <span class="order-badge">##{commandeBean.selectedCommande.id}</span>
+            </p>
+        </div>
+
+        <h:form>
+            <p:panel header="📦 Informations de la Commande">
+                <!-- Informations générales -->
+                <p:panelGrid columns="2" style="width:100%">
+                    <p:outputLabel value="📅 Date de commande :" />
+                    <p:outputLabel>
+                        <h:outputText value="#{commandeBean.selectedCommande.date}">
+                            <f:convertDateTime pattern="dd MMMM yyyy à HH:mm" locale="fr" />
+                        </h:outputText>
+                    </p:outputLabel>
+
+                    <p:outputLabel value="💰 Montant Total :" />
+                    <p:outputLabel styleClass="montant-total">
+                        <h:outputText value="#{commandeBean.selectedCommande.montant} DH">
+                            <f:convertNumber minFractionDigits="2" />
+                        </h:outputText>
+                    </p:outputLabel>
+
+                    <p:outputLabel value="👤 Client :" rendered="#{internauteBean.admin}" />
+                    <p:outputLabel rendered="#{internauteBean.admin}">
+                        <div class="client-info">
+                            <strong>#{commandeBean.selectedCommande.internaute.nom} #{commandeBean.selectedCommande.internaute.prenom}</strong>
+                            <small>✉️ #{commandeBean.selectedCommande.internaute.email}</small>
+                        </div>
+                    </p:outputLabel>
+
+                    <p:outputLabel value="📧 Votre compte :" rendered="#{internauteBean.user}" />
+                    <p:outputLabel rendered="#{internauteBean.user}">
+                        <strong>#{commandeBean.selectedCommande.internaute.email}</strong>
+                    </p:outputLabel>
+                </p:panelGrid>
+
+                <!-- Section Header for Products -->
+                <div class="section-header">
+                    <i class="fas fa-shopping-bag"></i>
+                    Articles commandés
+                </div>
+
+                <!-- Liste des articles -->
+                <p:dataTable value="#{commandeBean.lignesCommande}" var="ligne"
+                             emptyMessage="Aucun article trouvé dans cette commande.">
+
+                    <!-- Image du produit -->
+                    <p:column headerText="Image" width="100">
+                        <h:graphicImage value="/images/#{ligne.produit.image}"
+                                        alt="#{ligne.produit.designation}"
+                                        width="70"
+                                        height="70"
+                                        styleClass="product-image"
+                                        rendered="#{not empty ligne.produit.image}">
+                            <f:param name="v" value="#{empty ligne.produit.image ? '' : ligne.produit.image}" />
+                        </h:graphicImage>
+
+                    </p:column>
+
+                    <!-- Désignation -->
+                    <p:column headerText="Produit">
+                        <strong><h:outputText value="#{ligne.produit.designation}" /></strong>
+                    </p:column>
+
+                    <!-- Quantité -->
+                    <p:column headerText="Quantité">
+                        <span style="background: #f8f9fa; padding: 6px 14px; border-radius: 8px; font-weight: 700; color: #2c3e50;">
+                            ×#{ligne.quantite}
+                        </span>
+                    </p:column>
+
+                    <!-- Prix unitaire -->
+                    <p:column headerText="Prix Unitaire">
+                        <span class="price-cell">
+                            <h:outputText value="#{ligne.produit.prixUnitaire} DH">
+                                <f:convertNumber minFractionDigits="2" />
+                            </h:outputText>
+                        </span>
+                    </p:column>
+
+                    <!-- Sous-total -->
+                    <p:column headerText="Sous-total">
+                        <span class="subtotal-cell">
+                            <h:outputText value="#{ligne.prixTotal} DH">
+                                <f:convertNumber minFractionDigits="2" />
+                            </h:outputText>
+                        </span>
+                    </p:column>
+                </p:dataTable>
+
+                <!-- Bouton Retour -->
+                <p:commandButton value="Retour à la liste"
+                                 action="#{commandeBean.retourListe}"
+                                 icon="pi pi-arrow-left"
+                                 ajax="false" />
+            </p:panel>
+        </h:form>
+    </div>
+</h:body>
+</html>

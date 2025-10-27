@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets"
+      lang="fr">
+
+<f:view>
+
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Accueil</title>
+
+        <!-- PrimeFaces Theme  -->
+        <h:outputStylesheet library="primefaces" name="theme.css"/>
+        <h:outputStylesheet library="primefaces" name="Bootstrap/bootstrap-purple-light.css"/>
+
+        <!-- Lien Font Awesome -->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Poppins", sans-serif;
+            }
+
+            .hero {
+                background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+                color: white;
+                padding: 100px 0;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .hero::before {
+                content: '';
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.05)" points="0,1000 1000,0 1000,1000"/></svg>');
+                z-index: 1;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            .hero h1 {
+                font-size: 3.5rem;
+                margin-bottom: 1.5rem;
+                font-weight: 700;
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            }
+
+            .hero p {
+                font-size: 1.3rem;
+                margin-bottom: 2rem;
+                opacity: 0.9;
+            }
+
+            .cta-button {
+                display: inline-block;
+                padding: 15px 40px;
+                background: #ff6b6b;
+                color: white;
+                text-decoration: none;
+                border-radius: 50px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+
+            .cta-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+                background: #ff5252;
+            }
+
+            .features {
+                padding: 80px 0;
+                background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            }
+
+            .section-title {
+                text-align: center;
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+                color: #2c3e50;
+                font-weight: 700;
+            }
+
+            /* Container des cartes */
+            .features-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 30px;
+            }
+
+            /* Style des cartes */
+            .feature-card {
+                background: white;
+                border-radius: 20px;
+                padding: 40px 30px;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 2px solid transparent;
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Effet de fond animé au survol */
+            .feature-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(135deg, rgba(156, 39, 176, 0.05) 0%, rgba(106, 27, 154, 0.05) 100%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                z-index: 0;
+            }
+
+            .feature-card:hover::before {
+                opacity: 1;
+            }
+
+            .feature-card:hover {
+                transform: translateY(-10px) scale(1.02);
+                box-shadow: 0 20px 50px rgba(156, 39, 176, 0.3);
+                border-color: #9c27b0;
+            }
+
+            /* Container de l'icône */
+            .feature-icon-container {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 20px;
+                background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 5px 20px rgba(156, 39, 176, 0.3);
+                transition: all 0.4s ease;
+                position: relative;
+                z-index: 1;
+            }
+
+            .feature-card:hover .feature-icon-container {
+                transform: scale(1.1) rotate(5deg);
+                box-shadow: 0 8px 30px rgba(156, 39, 176, 0.5);
+            }
+
+            .feature-icon {
+                font-size: 2.5rem;
+                color: white;
+            }
+
+            /* Titre de la carte */
+            .feature-card h3 {
+                font-size: 1.5rem;
+                color: #2c3e50;
+                margin-bottom: 15px;
+                font-weight: 600;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* Description */
+            .feature-card p {
+                font-size: 1rem;
+                color: #666;
+                line-height: 1.6;
+                position: relative;
+                z-index: 1;
+            }
+
+            .footer {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                color: #ccc;
+                text-align: center;
+                padding: 2rem 0;
+                margin-top: 4rem;
+                font-size: 0.9rem;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .hero h1 {
+                    font-size: 2.5rem;
+                }
+                .hero p {
+                    font-size: 1.1rem;
+                }
+                .features-container {
+                    grid-template-columns: 1fr;
+                    gap: 20px;
+                }
+                .section-title {
+                    font-size: 2rem;
+                }
+            }
+        </style>
+
+    </h:head>
+
+    <h:body>
+
+        <!-- Navbar -->
+        <ui:include src="navbar.xhtml" />
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Welcome to TRENDIO</h1>
+                <p>Discover an exceptional shopping experience with our high-quality products and outstanding customer service.</p>
+                <h:link outcome="/vitrine.xhtml" styleClass="cta-button">
+                    Shop our collection
+                </h:link>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div>
+                <h2 class="section-title">Why Choose Trendio?</h2>
+
+                <div class="features-container">
+                    <!-- Carte 1 : Livraison Rapide -->
+                    <div class="feature-card">
+                        <div class="feature-icon-container">
+                            <i class="fas fa-shipping-fast feature-icon"></i>
+                        </div>
+                        <h3>Fast Delivery</h3>
+                        <p>Express delivery within 24-48h throughout the region</p>
+                    </div>
+
+                    <!-- Carte 2 : Paiement Sécurisé -->
+                    <div class="feature-card">
+                        <div class="feature-icon-container">
+                            <i class="fas fa-lock feature-icon"></i>
+                        </div>
+                        <h3>Secure Payment</h3>
+                        <p>100% secure transactions with SSL encryption</p>
+                    </div>
+
+                    <!-- Carte 3 : Qualité Garantie -->
+                    <div class="feature-card">
+                        <div class="feature-icon-container">
+                            <i class="fas fa-star feature-icon"></i>
+                        </div>
+                        <h3>Quality Guaranteed</h3>
+                        <p>Rigorously selected products for excellence</p>
+                    </div>
+
+                    <!-- Carte 4 : Support 7j/7 -->
+                    <div class="feature-card">
+                        <div class="feature-icon-container">
+                            <i class="fas fa-headset feature-icon"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Our team is here to assist you at any time</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <p>&#169; 2024 Trendio Ecommerce. All rights reserved.</p>
+            </div>
+        </footer>
+
+    </h:body>
+
+</f:view>
+</html>

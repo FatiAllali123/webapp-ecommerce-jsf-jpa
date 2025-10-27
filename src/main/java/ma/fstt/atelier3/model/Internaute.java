@@ -1,7 +1,6 @@
 package ma.fstt.atelier3.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -61,6 +60,7 @@ public class Internaute {
     // Internaute <-> Panier
     @OneToMany(mappedBy = "internaute")
     private List<Panier> paniers;
+
 
 
 }

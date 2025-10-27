@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Modifier un Produit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+
+
+        /* === CONTAINER === */
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* === HEADER === */
+        .page-header {
+            background: white;
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.5s ease;
+        }
+
+        .header-content h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .header-content h2 i {
+            color: #ffc107;
+        }
+
+        .header-content p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* === CARD === */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        /* === PANEL === */
+        .ui-panel {
+            border: none !important;
+            border-radius: 20px !important;
+        }
+
+        .ui-panel .ui-panel-titlebar {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.5rem 2rem !important;
+            font-weight: 700 !important;
+            font-size: 1.3rem !important;
+            border-radius: 0 !important;
+        }
+
+        .ui-panel .ui-panel-content {
+            padding: 2.5rem !important;
+        }
+
+        .ui-panel-footer {
+            background: #f8f9fa !important;
+            padding: 1.5rem 2.5rem !important;
+            border-top: 2px solid #e9ecef !important;
+        }
+
+        /* === MESSAGES === */
+        .ui-growl {
+            top: 80px !important;
+        }
+
+        /* === FORM GRID === */
+        .form-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group-full {
+            grid-column: 1 / -1;
+        }
+
+        /* === LABELS === */
+        .ui-outputlabel {
+            font-weight: 700 !important;
+            color: #2c3e50 !important;
+            font-size: 0.95rem !important;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .required-mark {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .label-icon {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* === INPUTS === */
+        .ui-inputfield,
+        .ui-inputtext,
+        .ui-inputnumber input,
+        .ui-inputtextarea {
+            width: 100% !important;
+            padding: 0.9rem 1rem !important;
+            border: 2px solid #e9ecef !important;
+            border-radius: 10px !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+            color: #2c3e50 !important;
+        }
+
+        .ui-inputfield:focus,
+        .ui-inputtext:focus,
+        .ui-inputnumber input:focus,
+        .ui-inputtextarea:focus {
+            border-color: #ffc107 !important;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.1) !important;
+            outline: none !important;
+        }
+
+        .ui-inputtextarea {
+            resize: vertical;
+            min-height: 100px !important;
+        }
+
+        /* === IMAGE SECTION === */
+        .image-section {
+            background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #ffe8a1;
+        }
+
+        .image-section h4 {
+            color: #2c3e50;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .current-image-wrapper {
+            text-align: center;
+        }
+
+        .current-image-label {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .current-image {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .current-image:hover {
+            transform: scale(1.05);
+        }
+
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        /* === FILE UPLOAD === */
+        .ui-fileupload {
+            border: 2px dashed #ffc107 !important;
+            border-radius: 10px !important;
+            padding: 1.2rem !important;
+            background: white !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .ui-fileupload:hover {
+            border-color: #ff9800 !important;
+            background: #fffef7 !important;
+        }
+
+        .ui-fileupload .ui-button {
+            background: #ffc107 !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 0.7rem 1.2rem !important;
+            font-weight: 600 !important;
+        }
+
+        .upload-hint {
+            display: block;
+            color: #6c757d;
+            font-size: 0.85rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* === BUTTONS === */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .ui-button {
+            padding: 0.9rem 2rem !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.6rem !important;
+            border: none !important;
+        }
+
+        /* Bouton Retour - Header */
+        .p-button-secondary.btn-back {
+            background: #6c757d !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+        }
+
+        .p-button-secondary.btn-back:hover {
+            background: #5a6268 !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4) !important;
+        }
+
+        /* Bouton Annuler - Footer */
+        .p-button-secondary {
+            background: #6c757d !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+        }
+
+        .p-button-secondary:hover {
+            background: #5a6268 !important;
+            transform: translateY(-3px) !important;
+        }
+
+        /* Bouton Enregistrer */
+        .p-button-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%) !important;
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3) !important;
+        }
+
+        .p-button-warning:hover {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 10px 30px rgba(255, 193, 7, 0.5) !important;
+        }
+
+        /* === MESSAGES === */
+        .ui-message {
+            margin-top: 0.5rem !important;
+            border-radius: 6px !important;
+        }
+
+        /* === HELPER TEXT === */
+        .helper-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .helper-text i {
+            color: #17a2b8;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .form-container {
+                padding: 0 1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            .header-content h2 {
+                font-size: 1.6rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .image-preview-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .current-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .ui-panel .ui-panel-content,
+            .ui-panel-footer {
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclure la navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <div class="form-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h2>
+                    <i class="fas fa-edit"></i>
+                    Modifier le Produit
+                </h2>
+                <p>Modifiez les informations du produit et enregistrez les changements</p>
+            </div>
+            <p:button value="Retour à la liste"
+                      outcome="List.xhtml"
+                      icon="pi pi-arrow-left"
+                      styleClass="p-button-secondary btn-back"/>
+        </div>
+
+        <!-- Messages -->
+        <p:growl id="messages" showDetail="true" life="3000"/>
+
+        <!-- Form -->
+        <h:form id="mainForm" enctype="multipart/form-data">
+            <div class="form-card">
+                <p:panel header="📦 Informations du produit">
+                    <div class="form-grid">
+                        <!-- Informations de base -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <p:outputLabel for="designation">
+                                    <i class="fas fa-tag label-icon"></i>
+                                    Désignation
+                                    <span class="required-mark">*</span>
+                                </p:outputLabel>
+                                <p:inputText id="designation"
+                                             value="#{produitBean.selectedproduit.designation}"
+                                             required="true"
+                                             requiredMessage="La désignation est obligatoire"/>
+                                <p:message for="designation"/>
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="prix">
+                                    <i class="fas fa-money-bill-wave label-icon"></i>
+                                    Prix (DH)
+                                    <span class="required-mark">*</span>
+                                </p:outputLabel>
+                                <p:inputNumber id="prix"
+                                               value="#{produitBean.selectedproduit.prixUnitaire}"
+                                               required="true"
+                                               requiredMessage="Le prix est obligatoire"
+                                               minValue="0"
+                                               mode="decimal"
+                                               minFractionDigits="2"/>
+                                <p:message for="prix"/>
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="stock">
+                                    <i class="fas fa-warehouse label-icon"></i>
+                                    Stock
+                                    <span class="required-mark">*</span>
+                                </p:outputLabel>
+                                <p:inputNumber id="stock"
+                                               value="#{produitBean.selectedproduit.stock}"
+                                               required="true"
+                                               requiredMessage="Le stock est obligatoire"
+                                               minValue="0"
+                                               decimalPlaces="0"/>
+                                <p:message for="stock"/>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group form-group-full">
+                            <p:outputLabel for="description">
+                                <i class="fas fa-align-left label-icon"></i>
+                                Description
+                                <span class="required-mark">*</span>
+                            </p:outputLabel>
+                            <p:inputTextarea id="description"
+                                             value="#{produitBean.selectedproduit.description}"
+                                             required="true"
+                                             requiredMessage="La description est obligatoire"
+                                             rows="4"
+                                             autoResize="false"/>
+                            <p:message for="description"/>
+                        </div>
+
+                        <!-- Section Image -->
+                        <div class="form-group-full">
+                            <div class="image-section">
+                                <h4>
+                                    <i class="fas fa-image"></i>
+                                    Image du produit
+                                </h4>
+
+                                <div class="image-preview-container">
+                                    <!-- Image actuelle -->
+                                    <div class="current-image-wrapper">
+                                        <span class="current-image-label">📸 Image actuelle</span>
+                                        <p:graphicImage value="#{produitBean.getImageUrl(produitBean.selectedproduit.image)}"
+                                                        styleClass="current-image"
+                                                        alt="Image actuelle"/>
+                                    </div>
+
+                                    <!-- Upload nouvelle image -->
+                                    <div class="upload-section">
+                                        <p:outputLabel for="image">
+                                            <i class="fas fa-upload label-icon"></i>
+                                            Changer l'image (optionnel)
+                                        </p:outputLabel>
+                                        <p:fileUpload id="image"
+                                                      value="#{produitBean.uploadedFile}"
+                                                      mode="simple"
+                                                      skinSimple="true"
+                                                      allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+                                                      fileLimit="1"
+                                                      invalidFileMessage="Type de fichier non supporté"
+                                                      chooseLabel="📁 Choisir une nouvelle image"/>
+                                        <p:message for="image"/>
+                                        <small class="upload-hint">
+                                            <i class="fas fa-info-circle"></i>
+                                            Formats: JPG, PNG, GIF • Max 1MB • Laissez vide pour conserver l'image actuelle
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer avec boutons -->
+                    <f:facet name="footer">
+                        <div class="button-group">
+                            <p:commandButton value="Annuler"
+                                             action="#{produitBean.annuler}"
+                                             icon="pi pi-times"
+                                             styleClass="p-button-secondary"
+                                             immediate="true"
+                                             outcome="List.xhtml?faces-redirect=true"/>
+
+                            <p:commandButton value="💾 Enregistrer les modifications"
+                                             action="#{produitBean.modifierProduit}"
+                                             icon="pi pi-check"
+                                             styleClass="p-button-warning"
+                                             update="messages"
+                                             process="@form"/>
+                        </div>
+                    </f:facet>
+                </p:panel>
+            </div>
+        </h:form>
+    </div>
+</h:body>
+</html>

@@ -52,9 +52,6 @@ public class Produit {
     // produit <-> lignePanier
     @OneToMany(mappedBy="produit")
     private List<LignePanier> lignesPanier ;
-    // categori <-> Produit
-    @ManyToOne
-    @JoinColumn(name = "id_categorie")
-    private Categorie categorie;
+
 
 }

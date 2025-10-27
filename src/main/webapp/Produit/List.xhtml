@@ -1,0 +1,514 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Gestion des Produits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+
+
+        /* === CONTENEUR PRINCIPAL === */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* === CARD === */
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* === EN-TÊTE === */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #f0f2f5;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Page Header */
+        .header{
+            background: white;
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 i {
+            color: #9c27b0;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .page-title i {
+            color: #6c757d;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            margin: 0.3rem 0 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* === BOUTON NOUVEAU === */
+        .p-button.p-button-success {
+            background: #28a745 !important;
+
+            border: none !important;
+            padding: 0.8rem 1.5rem !important;
+            border-radius: 10px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3) !important;
+        }
+
+        .p-button.p-button-success:hover {
+            background: #218838 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 18px rgba(40, 167, 69, 0.4) !important;
+        }
+
+        /* === MESSAGES === */
+        .ui-growl {
+            top: 80px !important;
+        }
+
+        /* === TABLEAU === */
+        .ui-datatable {
+            border: none !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        .ui-datatable thead th {
+            background: #f8f9fa !important;
+            color: #2c3e50 !important;
+            border: none !important;
+            border-bottom: 2px solid #e9ecef !important;
+            padding: 1rem 0.8rem !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            font-size: 0.9rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .ui-datatable tbody td {
+            padding: 1rem 0.8rem !important;
+            border-bottom: 1px solid #f0f2f5 !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            color: #2c3e50 !important;
+        }
+
+        .ui-datatable tbody tr {
+            transition: all 0.2s ease !important;
+            background: white !important;
+        }
+
+        .ui-datatable tbody tr:hover {
+            background: #f8f9fa !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even) {
+            background-color: #fafbfc !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even):hover {
+            background: #f8f9fa !important;
+        }
+
+        /* === IMAGE PRODUIT === */
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-image:hover {
+            transform: scale(1.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-color: #6c757d;
+        }
+
+        /* === DÉSIGNATION === */
+        .designation-text {
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: left !important;
+        }
+
+        /* === PRIX === */
+        .price-text {
+            font-weight: 700;
+            color: #495057;
+            font-size: 1.05rem;
+        }
+
+        /* === BADGE STOCK === */
+        .stock-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            min-width: 50px;
+        }
+
+        .stock-success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .stock-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+
+        .stock-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        /* === BOUTONS D'ACTION === */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+
+        }
+
+        .p-button.p-button-sm {
+            width: 38px !important;
+            height: 38px !important;
+            padding: 0 !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .p-button-warning {
+            background: transparent !important;
+            border: 2px solid #ffc107 !important;
+            color: #ffc107 !important;
+        }
+
+        .p-button-warning:hover {
+            background: #ffc107 !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .p-button-danger {
+            background: transparent !important;
+            border: 2px solid #dc3545 !important;
+            color: #dc3545 !important;
+        }
+
+        .p-button-danger:hover {
+            background: #dc3545 !important;
+            color: white !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* === PAGINATION === */
+        .ui-paginator {
+            background: #f8f9fa !important;
+            border: none !important;
+            border-radius: 0 0 12px 12px !important;
+            padding: 1rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page,
+        .ui-paginator .ui-paginator-next,
+        .ui-paginator .ui-paginator-prev,
+        .ui-paginator .ui-paginator-first,
+        .ui-paginator .ui-paginator-last {
+            border: none !important;
+            background: white !important;
+            color: #2c3e50 !important;
+            border-radius: 8px !important;
+            margin: 0 3px !important;
+            transition: all 0.2s ease !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 0.8rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page.ui-state-active {
+            background: #6c757d !important;
+            color: white !important;
+        }
+
+        .ui-paginator .ui-paginator-page:hover,
+        .ui-paginator .ui-paginator-next:hover,
+        .ui-paginator .ui-paginator-prev:hover {
+            background: #e9ecef !important;
+        }
+
+        /* === ÉTAT VIDE === */
+        .ui-datatable-empty-message {
+            text-align: center !important;
+            padding: 4rem 2rem !important;
+            color: #6c757d !important;
+            font-size: 1.1rem !important;
+        }
+
+        .ui-datatable-empty-message::before {
+            content: "📦";
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* === BOUTON RETOUR === */
+        .btn-back {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .p-button-text {
+            color: #6c757d !important;
+            font-weight: 600 !important;
+            padding: 0.8rem 1.5rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .p-button-text:hover {
+            color: #2c3e50 !important;
+            background: #f8f9fa !important;
+            border-radius: 10px !important;
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .ui-datatable tbody td,
+            .ui-datatable thead th {
+                padding: 0.8rem 0.5rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .product-image {
+                width: 50px;
+                height: 50px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Confirm Dialog */
+        .ui-confirmdialog {
+            border-radius: 15px !important;
+        }
+
+        .ui-confirmdialog .ui-dialog-titlebar {
+            background: #6c757d !important;
+            color: white !important;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclure la navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <div class="container">
+        <!-- Messages -->
+        <p:growl id="messages" showDetail="true" life="4000" globalOnly="true" />
+
+        <div class="card">
+            <!-- En-tête -->
+            <div class="header">
+                <div>
+                    <h1 class="page-title">
+                        <i class="fas fa-box"></i>
+                        Gestion des Produits
+                    </h1>
+                    <p class="page-subtitle">Ajoutez, modifiez ou supprimez vos produits</p>
+                </div>
+                <p:button value="➕ Nouveau Produit"
+                          outcome="/Produit/Ajouter.xhtml"
+                          icon="pi pi-plus"
+                          styleClass="p-button-success p-button-rounded"/>
+            </div>
+
+            <h:form id="mainForm">
+                <!-- Tableau -->
+                <p:dataTable id="productsTable"
+                             var="produit"
+                             value="#{produitBean.allproduits}"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="5,10,15,20"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="Affichage de {startRecord} à {endRecord} sur {totalRecords} produits"
+                             emptyMessage="Aucun produit disponible"
+                             styleClass="p-datatable-sm">
+
+                    <!-- Image -->
+                    <p:column headerText="Image" style="width: 100px;">
+                        <p:button outcome="/Produit/Details.xhtml" styleClass="p-button-text">
+                            <f:param name="id" value="#{produit.id}"/>
+                            <h:graphicImage value="#{produitBean.getImageUrl(produit.image)}"
+                                            styleClass="product-image"
+                                            alt="#{produit.designation}"/>
+                        </p:button>
+                    </p:column>
+
+                    <!-- Désignation -->
+                    <p:column headerText="📝 Produit" sortBy="#{produit.designation}" filterBy="#{produit.designation}">
+                        <h:outputText value="#{produit.designation}" styleClass="designation-text"/>
+                    </p:column>
+
+                    <!-- Prix -->
+                    <p:column headerText="💰 Prix" sortBy="#{produit.prixUnitaire}" style="width: 130px;">
+                        <span class="price-text">
+                            <h:outputText value="#{produit.prixUnitaire}">
+                                <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                            </h:outputText> DH
+                        </span>
+                    </p:column>
+
+                    <!-- Stock -->
+                    <p:column headerText="📊 Stock" sortBy="#{produit.stock}" style="width: 120px;">
+                        <span class="stock-badge #{produit.stock > 10 ? 'stock-success' : (produit.stock > 0 ? 'stock-warning' : 'stock-danger')}">
+                            #{produit.stock}
+                        </span>
+                    </p:column>
+
+                    <!-- Actions -->
+                    <p:column headerText="⚙️ Actions" style="width: 150px;">
+                        <div class="action-buttons">
+                            <!-- Modifier -->
+                            <p:button icon="pi pi-pencil"
+                                      title="Modifier"
+                                      outcome="/Produit/Modifier.xhtml"
+                                      styleClass="p-button-warning p-button-outlined p-button-sm">
+                                <f:param name="id" value="#{produit.id}"/>
+                            </p:button>
+
+                            <!-- Supprimer -->
+                            <p:commandButton icon="pi pi-trash"
+                                             title="Supprimer"
+                                             action="#{produitBean.supprimerProduit(produit)}"
+                                             styleClass="p-button-danger p-button-outlined p-button-sm"
+                                             update="messages productsTable"
+                                             process="@this">
+                                <p:confirm header="⚠️ Confirmation"
+                                           message="Êtes-vous sûr de vouloir supprimer ce produit ?"
+                                           icon="pi pi-exclamation-triangle"/>
+                            </p:commandButton>
+                        </div>
+                    </p:column>
+                </p:dataTable>
+
+                <!-- Confirmation Dialog -->
+                <p:confirmDialog global="true"
+                                 showEffect="fade"
+                                 hideEffect="fade"
+                                 responsive="true"
+                                 width="400">
+                    <p:commandButton value="✓ Oui"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-yes"
+                                     icon="pi pi-check"/>
+                    <p:commandButton value="✗ Non"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-no"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+        </div>
+
+        <!-- Bouton retour -->
+        <div class="btn-back">
+            <p:button value="← Retour au Dashboard"
+                      outcome="/dashboard.xhtml"
+                      icon="pi pi-arrow-left"
+                      styleClass="p-button-text"/>
+        </div>
+    </div>
+</h:body>
+</html>

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Mes Commandes - Trendio</title>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Google Fonts -->
+    <h:outputLink value="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" type="text/css"/>
+
+    <style>
+        .commandes-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInDown 0.6s ease;
+        }
+        .page-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-title i {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        /* Panel principal */
+        .ui-panel {
+            border: none !important;
+            border-radius: 20px !important;
+            box-shadow: 0 15px 40px rgba(156, 39, 176, 0.15) !important;
+            background: white !important;
+            overflow: hidden !important;
+            animation: fadeInUp 0.7s ease;
+        }
+
+        .ui-panel .ui-panel-titlebar {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0 !important;
+            padding: 1.5rem 2rem !important;
+            font-weight: 700 !important;
+            font-size: 1.4rem !important;
+        }
+
+        .ui-panel .ui-panel-content {
+            padding: 2.5rem !important;
+            background: white !important;
+        }
+
+        /* DataTable */
+        .ui-datatable {
+            border: none !important;
+            border-radius: 15px !important;
+            overflow: hidden !important;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08) !important;
+        }
+
+        .ui-datatable thead th {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.2rem 1rem !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.95rem !important;
+        }
+
+        .ui-datatable tbody td {
+            padding: 1.2rem 1rem !important;
+            border-bottom: 1px solid #e9ecef !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            color: #2c3e50 !important;
+        }
+
+        .ui-datatable tbody tr {
+            transition: all 0.3s ease !important;
+            background: white !important;
+        }
+
+        .ui-datatable tbody tr:hover {
+            background: #f8f4fb !important;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.1) !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even) {
+            background-color: #fafbfc !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even):hover {
+            background: #f8f4fb !important;
+        }
+
+        /* Text styles */
+        .montant-text {
+            font-weight: 800;
+            color: #A328B8;
+            font-size: 1.15rem;
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: #f8f4fb;
+            border-radius: 8px;
+        }
+
+        .date-text {
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .date-text i {
+            color: #9c27b0;
+        }
+
+        .id-text {
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+            font-size: 0.95rem;
+        }
+
+        .client-info {
+            text-align: left !important;
+            padding: 0.8rem !important;
+        }
+
+        .client-info strong {
+            color: #6a1b9a;
+            font-weight: 700;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .client-email {
+            color: #6c757d;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .client-email i {
+            color: #9c27b0;
+        }
+
+        /* Boutons */
+        .ui-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 0.7rem 1.5rem !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+        }
+
+        .ui-button:hover {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4) !important;
+        }
+
+        /* Bouton Actualiser */
+        .ui-button.ui-button-secondary {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3) !important;
+            padding: 0.9rem 2rem !important;
+            font-size: 1rem !important;
+        }
+
+        .ui-button.ui-button-secondary:hover {
+            background: linear-gradient(135deg, #6a1b9a 0%, #4a148c 100%) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.5) !important;
+        }
+
+        /* Paginator */
+        .ui-paginator {
+            background: #f8f9fa !important;
+            border: none !important;
+            border-radius: 0 0 15px 15px !important;
+            padding: 1.2rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page,
+        .ui-paginator .ui-paginator-pages,
+        .ui-paginator .ui-paginator-next,
+        .ui-paginator .ui-paginator-last,
+        .ui-paginator .ui-paginator-first,
+        .ui-paginator .ui-paginator-prev {
+            border: none !important;
+            background: white !important;
+            color: #2c3e50 !important;
+            border-radius: 10px !important;
+            margin: 0 3px !important;
+            transition: all 0.3s ease !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 0.8rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page.ui-state-active {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3) !important;
+        }
+
+        .ui-paginator .ui-paginator-page:hover,
+        .ui-paginator .ui-paginator-next:hover,
+        .ui-paginator .ui-paginator-prev:hover,
+        .ui-paginator .ui-paginator-first:hover,
+        .ui-paginator .ui-paginator-last:hover {
+            background: #f8f4fb !important;
+            transform: translateY(-2px);
+        }
+
+        /* Empty message */
+        .ui-datatable-empty-message {
+            text-align: center !important;
+            padding: 4rem 2rem !important;
+            color: #6c757d !important;
+            font-size: 1.2rem !important;
+            font-style: italic;
+        }
+
+        .ui-datatable-empty-message::before {
+            content: "🛒";
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Action buttons container */
+        .action-buttons {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f0f2f5;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .commandes-container {
+                padding: 0 1rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+                flex-direction: column;
+            }
+
+            .ui-panel .ui-panel-content {
+                padding: 1.5rem !important;
+            }
+
+            .ui-datatable thead th,
+            .ui-datatable tbody td {
+                padding: 0.8rem 0.5rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .id-text {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .montant-text {
+                font-size: 1rem;
+            }
+        }
+
+        /* Stats Cards (optional enhancement) */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: #9c27b0;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            margin: 0.5rem 0;
+        }
+
+        .stat-card .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclure la navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <div class="commandes-container">
+        <!-- En-tête de page -->
+        <div class="page-header">
+            <h1 class="page-title">
+                <i class="fas fa-shopping-bag"></i>
+                #{iternauteBean.isAdmin ? 'Toutes les Commandes' : 'Mes Commandes'}
+            </h1>
+            <p class="page-subtitle">
+                #{iternauteBean.isAdmin ?
+                  '📊 Gestion complète des commandes clients' :
+                  '📦 Suivez l\'historique de vos commandes'}
+            </p>
+        </div>
+
+        <h:form>
+            <p:panel header="#{iternauteBean.isAdmin ? '📋 Liste des Commandes' : '🛍️ Vos Commandes'}">
+                <p:dataTable value="#{commandeBean.commandes}" var="cmd"
+                             emptyMessage="Aucune commande trouvée."
+                             paginator="true"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             currentPageReportTemplate="Affichage de {startRecord} à {endRecord} sur {totalRecords} commandes">
+
+                    <p:column headerText="ID">
+                        <span class="id-text">##{cmd.id}</span>
+                    </p:column>
+
+                    <p:column headerText="Date">
+                        <span class="date-text">
+                            <i class="far fa-calendar-alt"></i>
+                            <h:outputText value="#{cmd.date}">
+                                <f:convertDateTime pattern="dd/MM/yyyy à HH:mm" />
+                            </h:outputText>
+                        </span>
+                    </p:column>
+
+                    <p:column headerText="Montant">
+                        <span class="montant-text">
+                            <h:outputText value="#{cmd.montant}">
+                                <f:convertNumber minFractionDigits="2" maxFractionDigits="2" />
+                            </h:outputText> DH
+                        </span>
+                    </p:column>
+
+                    <p:column headerText="Client" rendered="#{iternauteBean.isAdmin}">
+                        <div class="client-info">
+                            <strong>#{cmd.internaute.nom} #{cmd.internaute.prenom}</strong>
+                            <span class="client-email">
+                                <i class="fas fa-envelope"></i>
+                                #{cmd.internaute.email}
+                            </span>
+                        </div>
+                    </p:column>
+
+                    <p:column headerText="Actions">
+                        <p:commandButton value="Détails"
+                                         action="#{commandeBean.voirDetails(cmd)}"
+                                         icon="pi pi-eye"
+                                         ajax="false" />
+                    </p:column>
+                </p:dataTable>
+
+                <div class="action-buttons">
+                    <p:commandButton value="🔄 Actualiser la liste"
+                                     action="#{commandeBean.loadCommandes}"
+                                     icon="pi pi-refresh"
+                                     update="@form"
+                                     styleClass="ui-button-secondary" />
+                </div>
+            </p:panel>
+        </h:form>
+    </div>
+</h:body>
+</html>

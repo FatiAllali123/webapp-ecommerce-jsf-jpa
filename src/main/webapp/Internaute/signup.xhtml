@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets"
+      lang="fr">
+
+<f:view>
+
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Inscription - Trendio</title>
+
+        <!-- PrimeFaces Theme -->
+        <h:outputStylesheet library="primefaces" name="theme.css"/>
+        <h:outputStylesheet library="primefaces" name="Bootstrap/bootstrap-purple-light.css"/>
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Poppins", -apple-system, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 40px 20px;
+            }
+
+            /* Container principal */
+            .signup-container {
+                background: white;
+                border-radius: 30px;
+                box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+                overflow: hidden;
+                max-width: 600px;
+                width: 100%;
+                animation: slideIn 0.6s ease-out;
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Header avec gradient */
+            .signup-header {
+                background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%);
+                padding: 40px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .signup-header::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                animation: pulse 3s infinite;
+            }
+
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); opacity: 1; }
+                50% { transform: scale(1.1); opacity: 0.8; }
+            }
+
+            .signup-header h1 {
+                color: white;
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 10px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .signup-header p {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 0.95rem;
+                position: relative;
+                z-index: 1;
+            }
+
+            .signup-icon {
+                width: 80px;
+                height: 80px;
+                background: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                position: relative;
+                z-index: 1;
+            }
+
+            .signup-icon i {
+                font-size: 2.5rem;
+                color: #9c27b0;
+            }
+
+            /* Body du formulaire */
+            .signup-body {
+                padding: 40px;
+            }
+
+            /* Styling des champs PrimeFaces */
+            .signup-body .ui-inputfield {
+                width: 100% !important;
+                padding: 14px 20px !important;
+                border: 2px solid #e0e0e0 !important;
+                border-radius: 12px !important;
+                font-size: 1rem !important;
+                transition: all 0.3s ease !important;
+                font-family: "Poppins", sans-serif !important;
+            }
+
+            .signup-body .ui-inputfield:focus {
+                border-color: #9c27b0 !important;
+                box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1) !important;
+                outline: none !important;
+            }
+
+            /* Grid pour deux colonnes */
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-bottom: 25px;
+            }
+
+            .form-row.full-width {
+                grid-template-columns: 1fr;
+            }
+
+            /* Labels */
+            .form-group {
+                margin-bottom: 25px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #2c3e50;
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+            .form-group label i {
+                margin-right: 8px;
+                color: #9c27b0;
+                width: 20px;
+                text-align: center;
+            }
+
+            /* Messages d'erreur */
+            .ui-messages {
+                margin-bottom: 20px;
+                border-radius: 12px !important;
+                border: none !important;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            /* Bouton d'inscription */
+            .signup-button {
+                width: 100% !important;
+                padding: 14px 20px !important;
+                background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+                border: none !important;
+                border-radius: 12px !important;
+                color: white !important;
+                font-size: 1.1rem !important;
+                font-weight: 600 !important;
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+                box-shadow: 0 8px 20px rgba(156, 39, 176, 0.3) !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+            }
+
+            .signup-button:hover {
+                transform: translateY(-2px) !important;
+                box-shadow: 0 12px 30px rgba(156, 39, 176, 0.5) !important;
+                background: linear-gradient(135deg, #7b1fa2 0%, #4a148c 100%) !important;
+            }
+
+            .signup-button:active {
+                transform: translateY(0) !important;
+            }
+
+            .signup-button .ui-button-text {
+                padding: 0 !important;
+            }
+
+            /* Séparateur */
+            .divider {
+                display: flex;
+                align-items: center;
+                margin: 30px 0;
+                color: #999;
+                font-size: 0.9rem;
+            }
+
+            .divider::before,
+            .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: #e0e0e0;
+            }
+
+            .divider span {
+                padding: 0 15px;
+            }
+
+            /* Lien de connexion */
+            .login-link {
+                text-align: center;
+                margin-top: 25px;
+                color: #666;
+                font-size: 0.95rem;
+            }
+
+            .login-link a {
+                color: #9c27b0;
+                font-weight: 600;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            .login-link a:hover {
+                color: #6a1b9a;
+                text-decoration: underline;
+            }
+
+            /* Bouton retour */
+            .back-button {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 10px;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.3s ease;
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+            }
+
+            .back-button:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateX(-5px);
+            }
+
+            /* Badge requis */
+            .required {
+                color: #f44336;
+                margin-left: 4px;
+            }
+
+            /* Progress indicator */
+            .form-progress {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 30px;
+                padding: 0 10px;
+            }
+
+            .progress-step {
+                flex: 1;
+                height: 4px;
+                background: #e0e0e0;
+                border-radius: 2px;
+                margin: 0 5px;
+                transition: all 0.3s ease;
+            }
+
+            .progress-step.active {
+                background: linear-gradient(90deg, #9c27b0, #6a1b9a);
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .signup-container {
+                    margin: 20px;
+                }
+
+                .signup-header {
+                    padding: 30px 20px;
+                }
+
+                .signup-header h1 {
+                    font-size: 1.5rem;
+                }
+
+                .signup-body {
+                    padding: 30px 20px;
+                }
+
+                .form-row {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            /* Style pour password strength indicator */
+            .password-strength {
+                height: 4px;
+                border-radius: 2px;
+                margin-top: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .password-strength.weak {
+                background: #f44336;
+                width: 33%;
+            }
+
+            .password-strength.medium {
+                background: #ff9800;
+                width: 66%;
+            }
+
+            .password-strength.strong {
+                background: #4caf50;
+                width: 100%;
+            }
+        </style>
+
+    </h:head>
+
+    <h:body>
+
+        <div class="signup-container">
+            <!-- Header -->
+            <div class="signup-header">
+
+                <div class="signup-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Create Account</h1>
+                <p>Join Trendio and start shopping today!</p>
+            </div>
+
+            <!-- Body avec formulaire -->
+            <div class="signup-body">
+                <h:form id="signupForm">
+
+                    <!-- Messages d'erreur/succès -->
+                    <p:messages id="messages" showDetail="true" closable="true"/>
+
+
+
+                    <!-- Nom et Prénom -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nom">
+                                <i class="fas fa-user"></i>
+                                Last Name<span class="required">*</span>
+                            </label>
+                            <p:inputText id="nom"
+                                         value="#{authBean.nom}"
+                                         placeholder="Enter your last name"
+                                         required="true"
+                                         requiredMessage="Last name is required">
+
+                            </p:inputText>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="prenom">
+                                <i class="fas fa-user"></i>
+                                First Name<span class="required">*</span>
+                            </label>
+                            <p:inputText id="prenom"
+                                         value="#{authBean.prenom}"
+                                         placeholder="Enter your first name"
+                                         required="true"
+                                         requiredMessage="First name is required">
+
+                            </p:inputText>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">
+                            <i class="fas fa-envelope"></i>
+                            Email Address<span class="required">*</span>
+                        </label>
+                        <p:inputText id="email"
+                                     value="#{authBean.email}"
+                                     placeholder="your.email@example.com"
+                                     required="true"
+                                     requiredMessage="Email is required"
+                                     validatorMessage="Please enter a valid email address">
+                            <f:validateRegex pattern="^[A-Za-z0-9+_.-]+@(.+)$"/>
+                        </p:inputText>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        <label for="password">
+                            <i class="fas fa-lock"></i>
+                            Password<span class="required">*</span>
+                        </label>
+                        <p:password id="password"
+                                    value="#{authBean.password}"
+                                    placeholder="Create a strong password"
+                                    required="true"
+                                    requiredMessage="Password is required"
+
+                                    toggleMask="true"
+                                    promptLabel="Enter password"
+                                    >
+
+                        </p:password>
+                    </div>
+
+                    <!-- Adresse -->
+                    <div class="form-group">
+                        <label for="adresse">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Address<span class="required">*</span>
+                        </label>
+                        <p:inputTextarea id="adresse"
+                                         value="#{authBean.adresse}"
+                                         placeholder="Enter your full address"
+                                         rows="3"
+                                         autoResize="false"
+                                         required="true"
+                                         requiredMessage="Address is required">
+
+                        </p:inputTextarea>
+                    </div>
+
+
+
+                    <!-- Bouton d'inscription -->
+                    <p:commandButton value="Create Account"
+                                     action="#{authBean.signup}"
+                                     styleClass="signup-button"
+                                     icon="fas fa-user-plus"
+                                     iconPos="right"
+                                     ajax="false"/>
+
+
+                    <!-- Lien de connexion -->
+                    <div class="login-link">
+                        Already have an account?
+                        <h:link outcome="/login" value="Sign in"/>
+                    </div>
+
+                </h:form>
+            </div>
+        </div>
+
+    </h:body>
+
+</f:view>
+</html>

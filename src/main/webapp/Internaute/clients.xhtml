@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Gestion des Clients - Trendio Admin</title>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+
+
+        .admin-container {
+            max-width: 1700px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .page-header h1 i {
+            color: #9c27b0;
+        }
+
+        /* Back Button - Style sobre */
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.9rem 1.8rem !important;
+            border-radius: 12px !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #9c27b0 0%, #6a1b9a 100%) !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.4) !important;
+        }
+
+
+        /* Table Container */
+        .table-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.7s ease;
+        }
+
+
+        .ui-datatable thead th {
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 1.2rem 1rem !important;
+            font-weight: 700 !important;
+            text-align: center !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem !important;
+        }
+
+        .ui-datatable tbody td {
+            padding: 1.2rem 1rem !important;
+            border-bottom: 1px solid #e9ecef !important;
+            text-align: center !important;
+            vertical-align: middle !important;
+            color: #2c3e50 !important;
+            font-size: 0.95rem !important;
+        }
+
+        .ui-datatable tbody tr {
+            transition: all 0.3s ease !important;
+            background: white !important;
+        }
+
+        .ui-datatable tbody tr:nth-child(even) {
+            background-color: #fafbfc !important;
+        }
+
+        .ui-datatable tbody tr:hover {
+            background: #f8f9fa !important;
+            transform: translateX(5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+        }
+
+        /* ID Column */
+        .ui-datatable tbody td:first-child {
+            font-weight: 700;
+            color: #6c757d;
+            background: #f8f9fa;
+            font-size: 0.9rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+
+        /* Action Buttons */
+        .ui-button {
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 0.1rem 0.5rem !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            margin: 2px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.3rem !important;
+            min-height: auto !important;
+        }
+
+        /* Bouton Commandes - Violet (#6a1b9a) */
+        .btn-orders {
+            background: #9c27b0 !important;
+            color: white !important;
+            box-shadow: 0 3px 8px rgba(106, 27, 154, 0.3) !important;
+        }
+
+        .btn-orders:hover {
+            background: #9c27b0!important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(106, 27, 154, 0.4) !important;
+        }
+
+        /* Bouton Activer - Vert */
+        .btn-activate {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+            color: white !important;
+            box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3) !important;
+        }
+
+        .btn-activate:hover {
+            background: linear-gradient(135deg, #1e7e34 0%, #155724 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+        }
+
+        /* Bouton Désactiver - Jaune */
+        .btn-deactivate {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+            color: #333 !important;
+            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.3) !important;
+        }
+
+        .btn-deactivate:hover {
+            background: linear-gradient(135deg, #e0a800 0%, #c69500 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4) !important;
+        }
+
+        /* Bouton Supprimer - Rouge */
+        .btn-delete {
+            background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%) !important;
+            color: white !important;
+            box-shadow: 0 3px 8px rgba(220, 53, 69, 0.3) !important;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #bd2130 0%, #a71e2a 100%) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+        }
+
+        /* États focus pour accessibilité */
+        .ui-button:focus {
+            outline: 2px solid rgba(0, 123, 255, 0.5) !important;
+            outline-offset: 2px !important;
+        }
+
+        /* Style pour les icônes dans les boutons */
+        .ui-button .ui-button-icon-left,
+        .ui-button .ui-button-icon-right {
+            font-size: 0.75rem !important;
+            margin: 0 !important;
+        }
+
+        /* Paginator */
+        .ui-paginator {
+            background: #f8f9fa !important;
+            border: none !important;
+            border-radius: 0 0 15px 15px !important;
+            padding: 1.2rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page,
+        .ui-paginator .ui-paginator-next,
+        .ui-paginator .ui-paginator-prev,
+        .ui-paginator .ui-paginator-first,
+        .ui-paginator .ui-paginator-last {
+            border: none !important;
+            background: white !important;
+            color: #2c3e50 !important;
+            border-radius: 10px !important;
+            margin: 0 3px !important;
+            transition: all 0.3s ease !important;
+            font-weight: 600 !important;
+            padding: 0.5rem 0.8rem !important;
+        }
+
+        .ui-paginator .ui-paginator-page.ui-state-active {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3) !important;
+        }
+
+        .ui-paginator .ui-paginator-page:hover,
+        .ui-paginator .ui-paginator-next:hover,
+        .ui-paginator .ui-paginator-prev:hover,
+        .ui-paginator .ui-paginator-first:hover,
+        .ui-paginator .ui-paginator-last:hover {
+            background: #e9ecef !important;
+            transform: translateY(-2px);
+        }
+
+        /* Confirm Dialog */
+        .ui-confirmdialog {
+            border-radius: 15px !important;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2) !important;
+        }
+
+        .ui-confirmdialog .ui-dialog-titlebar {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+            color: white !important;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.2rem !important;
+        }
+
+        .ui-confirmdialog-yes {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%) !important;
+            color: white !important;
+        }
+
+        .ui-confirmdialog-no {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            color: white !important;
+        }
+
+        /* Empty Message */
+        .ui-datatable-empty-message {
+            text-align: center !important;
+            padding: 4rem 2rem !important;
+            color: #6c757d !important;
+            font-size: 1.2rem !important;
+            font-style: italic;
+        }
+
+        .ui-datatable-empty-message::before {
+            content: "👥";
+            display: block;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card.total i { color: #6c757d; }
+        .stat-card.active i { color: #28a745; }
+        .stat-card.inactive i { color: #dc3545; }
+
+
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .page-header {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .stats-summary {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0;
+            }
+
+            .admin-container {
+                padding: 0 1rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.6rem;
+            }
+
+            .table-container {
+                padding: 1.5rem;
+            }
+
+            .ui-datatable tbody td,
+            .ui-datatable thead th {
+                padding: 0.8rem 0.5rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            .ui-button {
+                padding: 0.6rem 0.9rem !important;
+                font-size: 0.75rem !important;
+            }
+
+            .status-badge {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Accent violet subtil uniquement sur hover important */
+        .page-header:hover h1 i {
+            color: #9c27b0;
+            transition: color 0.3s ease;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclure la navbar -->
+    <ui:include src="/navbar.xhtml"/>
+    <br/>
+
+    <div class="admin-container">
+        <!-- En-tête -->
+        <div class="page-header">
+            <h1>
+                <i class="fas fa-users"></i>
+                Gestion des Clients
+            </h1>
+            <p:button value="← Retour au Dashboard"
+                      outcome="/dashboard.xhtml"
+                      styleClass="back-btn"/>
+        </div>
+
+        <p:messages id="messages" showDetail="true" closable="true"/>
+
+        <!-- Tableau -->
+        <div class="table-container">
+            <h:form id="clientsForm">
+                <p:dataTable id="clientsTable"
+                             var="client"
+                             value="#{iternauteBean.allUsers}"
+                             paginator="true"
+                             rows="10"
+                             paginatorPosition="bottom"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                             currentPageReportTemplate="Affichage de {startRecord} à {endRecord} sur {totalRecords} clients"
+                             emptyMessage="Aucun client trouvé">
+
+                    <p:column headerText="ID" style="width: 80px;">
+                        <h:outputText value="#{client.id}"/>
+                    </p:column>
+
+                    <p:column headerText="👤 Nom complet" style="width: 180px;">
+                        <strong><h:outputText value="#{client.nom} #{client.prenom}"/></strong>
+                    </p:column>
+
+                    <p:column headerText="📧 Email" style="width: 180px;">
+                        <h:outputText value="#{client.email}"/>
+                    </p:column>
+
+                    <p:column headerText="📊 Statut" style="width: 150px;">
+                        <span class="status-badge #{client.statut_compte == 'active' ? 'status-active' : 'status-inactive'}">
+                            <i class="fas #{client.statut_compte == 'active' ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            #{client.statut_compte == 'active' ? 'Actif' : 'Désactivé'}
+                        </span>
+                    </p:column>
+
+                    <p:column headerText="⚙️ Actions" style="width: 400px;">
+                        <!-- Bouton Voir Commandes -->
+                        <p:commandButton value="📦 Commandes"
+                                         styleClass="btn-orders"
+                                         action="#{iternauteBean.voirCommandesClient(client)}"
+                                         ajax="false"
+                                         immediate="true"/>
+
+                        <!-- Bouton Désactiver/Activer -->
+                        <p:commandButton value="⏸️ Désactiver"
+                                         styleClass="btn-deactivate"
+                                         action="#{iternauteBean.desactiver(client)}"
+                                         rendered="#{client.statut_compte == 'active'}"
+                                         update="@form messages"/>
+
+                        <p:commandButton value="▶️ Activer"
+                                         styleClass="btn-activate"
+                                         action="#{iternauteBean.activer(client)}"
+                                         rendered="#{client.statut_compte != 'active'}"
+                                         update="@form messages"/>
+
+                        <!-- Bouton Supprimer -->
+                        <p:commandButton value="🗑️ Supprimer"
+                                         styleClass="btn-delete"
+                                         action="#{iternauteBean.supprimer(client)}"
+                                         update="clientsForm:clientsTable messages">
+                            <p:confirm header="⚠️ Confirmation de suppression"
+                                       message="Êtes-vous sûr de vouloir supprimer ce client ?"
+                                       icon="pi pi-exclamation-triangle"/>
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+                <p:confirmDialog global="true"
+                                 showEffect="fade"
+                                 hideEffect="fade"
+                                 responsive="true"
+                                 width="400">
+                    <p:commandButton value="✓ Oui"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-yes"
+                                     icon="pi pi-check"/>
+                    <p:commandButton value="✗ Non"
+                                     type="button"
+                                     styleClass="ui-confirmdialog-no"
+                                     icon="pi pi-times"/>
+                </p:confirmDialog>
+            </h:form>
+        </div>
+    </div>
+
+    <h:outputScript library="primefaces" name="components.js"/>
+</h:body>
+</html>

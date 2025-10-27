@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Commandes de #{iternauteBean.selectedClient.nom} #{iternauteBean.selectedClient.prenom}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        .page-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .client-info {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+            color: white !important;
+            border: none !important;
+            padding: 0.9rem 1.8rem !important;
+            border-radius: 12px !important;
+            text-decoration: none !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.5rem;
+        }
+        .table-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-en-cours { background-color: #fff3cd; color: #856404; }
+        .status-livree { background-color: #d4edda; color: #155724; }
+        .status-annulee { background-color: #f8d7da; color: #721c24; }
+        .btn-details {
+            background-color: #9c27b0 ;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 0.1rem 0.5rem !important;
+            font-weight: 600 !important;
+            font-size: 0.8rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            margin: 2px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.3rem !important;
+            min-height: auto !important;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:viewParam name="clientId" value="#{commandeBean.client.id}" required="true"/>
+        <f:viewAction action="#{commandeBean.loadCommandesForClient(iternauteBean.selectedClient.id)}"/>
+    </f:metadata>
+
+    <div class="container">
+        <!-- En-tête -->
+        <div class="page-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>📦 Commandes du Client</h1>
+                    <div class="client-info">
+                        <p style="margin: 5px 0;"><strong>👤 Nom :</strong> #{iternauteBean.selectedClient.nom} #{iternauteBean.selectedClient.prenom}</p>
+                        <p style="margin: 5px 0;"><strong>📧 Email :</strong> #{iternauteBean.selectedClient.email}</p>
+                        <p style="margin: 5px 0;"><strong>🆔 ID Client :</strong> #{iternauteBean.selectedClient.id}</p>
+                    </div>
+                </div>
+                <p:button value="← Retour aux Clients" outcome="/Internaute/clients.xhtml" styleClass="back-btn"/>
+            </div>
+        </div>
+
+        <p:messages id="messages" showDetail="true" closable="true"/>
+
+        <!-- Tableau des commandes -->
+        <div class="table-container">
+            <h:form id="commandesForm">
+                <h3>Liste des commandes (#{commandeBean.commandes.size()} commande(s))</h3>
+
+                <p:dataTable id="commandesTable"
+                             var="cmd"
+                             value="#{commandeBean.commandes}"
+                             paginator="true"
+                             rows="10"
+                             emptyMessage="Aucune commande trouvée pour ce client">
+
+                    <p:column headerText="ID" style="width: 80px; text-align: center;">
+                        <h:outputText value="#{cmd.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Date" style="width: 150px;">
+                        <h:outputText value="#{cmd.date}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm"/>
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Montant Total" style="width: 150px; text-align: right;">
+                        <h:outputText value="#{cmd.montant}" style="font-weight: bold; color: #667eea;">
+                            <f:convertNumber type="currency" currencySymbol="MAD " maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+
+
+
+                    <p:column headerText="Actions" style="width: 150px; text-align: center;">
+                        <p:commandButton value="👁️ Détails"
+                                         styleClass="btn-details"
+                                         action="#{commandeBean.voirDetails(cmd)}"
+                                         />
+
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </div>
+    </div>
+
+    <h:outputScript library="primefaces" name="components.js"/>
+</h:body>
+</html>

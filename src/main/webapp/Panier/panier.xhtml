@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Mon Panier - Trendio</title>
+
+
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <h:outputStylesheet>
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        }
+
+        body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding-bottom: 40px;
+        }
+
+        .cart-container {
+        max-width: 1100px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 25px;
+        }
+
+        .cart-title {
+        font-size: 26px;
+        font-weight: 600;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        }
+
+        .cart-count {
+        background: #9c27b0;
+        color: white;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        }
+
+        .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7f8c8d;
+        }
+
+        .empty-cart i {
+        font-size: 64px;
+        color: #ddd;
+        margin-bottom: 20px;
+        }
+
+        .empty-cart h3 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #2c3e50;
+        }
+
+        .empty-cart p {
+        margin-bottom: 20px;
+        }
+
+        .cart-item {
+        display: grid;
+        grid-template-columns: 80px 1fr 120px 120px 40px;
+        gap: 15px;
+        padding: 18px 0;
+        border-bottom: 1px dashed #eee;
+        align-items: center;
+        }
+
+        @media (max-width: 768px) {
+        .cart-item {
+        grid-template-columns: 70px 1fr;
+        gap: 12px;
+        }
+        .quantity-col, .price-col, .remove-col {
+        grid-column: 1 / -1;
+        justify-self: start;
+        }
+        }
+
+        .product-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid #eee;
+        }
+
+        .product-info h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0 0 6px;
+        }
+
+        .product-info p {
+        font-size: 14px;
+        color: #7f8c8d;
+        margin: 0;
+        }
+
+        .quantity-input {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 4px;
+        width: fit-content;
+        }
+
+        .quantity-btn {
+        background: #9c27b0 !important;
+        color: white !important;
+        border: none !important;
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        cursor: pointer !important;
+        transition: all 0.2s !important;
+        padding: 0 !important;
+        }
+
+        .quantity-btn:hover:not(.disabled) {
+        background: #7b1fa2 !important;
+        transform: scale(1.05);
+        }
+
+        .quantity-btn.ui-state-disabled,
+        .quantity-btn.disabled {
+        background: #ccc !important;
+        cursor: not-allowed !important;
+        opacity: 0.6 !important;
+        }
+
+        .price {
+        font-weight: 600;
+        color: #2c3e50;
+        text-align: right;
+        }
+
+        .subtotal {
+        font-weight: 600;
+        color: #e91e63;
+        text-align: right;
+        }
+
+        .remove-btn {
+        color: #e74c3c;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+        color: #c0392b;
+        transform: scale(1.1);
+        }
+
+        .cart-summary {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 16px;
+        margin-top: 30px;
+        }
+
+        .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        margin-bottom: 12px;
+        }
+
+        .summary-total {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2c3e50;
+        border-top: 2px solid #eee;
+        padding-top: 15px;
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        }
+
+        .checkout-btn {
+        width: 100% !important;
+        background: linear-gradient(135deg, #9c27b0, #e91e63) !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 16px !important;
+        font-weight: 600 !important;
+        font-size: 18px !important;
+        color: white !important;
+        margin-top: 20px !important;
+        box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3) !important;
+        transition: all 0.3s ease !important;
+        }
+
+        .checkout-btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 10px 30px rgba(156, 39, 176, 0.4) !important;
+        }
+
+        .continue-shopping {
+        text-align: center;
+        margin-top: 20px;
+        }
+    </h:outputStylesheet>
+</h:head>
+
+<h:body>
+    <!-- Include Navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <div class="cart-container">
+
+        <!-- Header -->
+        <div class="cart-header">
+            <h1 class="cart-title">
+                <i class="fas fa-shopping-cart"></i> Mon Panier
+                <span class="cart-count">#{panierBean.nombreArticles}</span>
+            </h1>
+            <p:commandLink value="Vider le panier"
+                           action="#{panierBean.viderPanier}"
+                           styleClass="p-button p-button-text p-button-danger"
+                           update="cartForm"
+                           onclick="return confirm('Vider tout le panier ?')"/>
+        </div>
+
+        <!-- Empty Cart -->
+        <ui:fragment rendered="#{empty panierBean.panierCourant.lignes}">
+            <div class="empty-cart">
+                <i class="fas fa-shopping-bag"></i>
+                <h3>Votre panier est vide</h3>
+                <p>Ajoutez des produits pour continuer vos achats.</p>
+                <p:button value="Continuer les achats"
+                          outcome="/vitrine.xhtml"
+                          styleClass="p-button p-button-outlined"
+                          icon="fas fa-arrow-left"/>
+            </div>
+        </ui:fragment>
+
+        <!-- Cart Items -->
+        <ui:fragment rendered="#{not empty panierBean.panierCourant.lignes}">
+            <h:form id="cartForm">
+
+                <ui:repeat var="ligne" value="#{panierBean.panierCourant.lignes}">
+                    <div class="cart-item">
+
+                        <!-- Image -->
+                        <div>
+                            <h:graphicImage value="/images/#{ligne.produit.image}"
+                                            width="80" height="80"
+                                            styleClass="product-img"
+                                            alt="#{ligne.produit.designation}"/>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="product-info">
+                            <h4>#{ligne.produit.designation}</h4>
+                            <p>#{ligne.produit.prixUnitaire} DH</p>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="quantity-col">
+                            <div class="quantity-input">
+                                <!-- Bouton - -->
+                                <p:commandButton value="-"
+                                                 action="#{panierBean.mettreAJourQuantite(ligne, ligne.quantite - 1)}"
+                                                 styleClass="quantity-btn"
+                                                 update="cartForm"
+                                                 disabled="#{ligne.quantite le 1}"
+                                                 process="@this"/>
+
+                                <span style="min-width:30px; text-align:center; font-weight:600;">#{ligne.quantite}</span>
+
+                                <!-- Bouton + -->
+                                <p:commandButton value="+"
+                                                 action="#{panierBean.mettreAJourQuantite(ligne, ligne.quantite + 1)}"
+                                                 styleClass="quantity-btn"
+                                                 update="cartForm"
+                                                 disabled="#{ligne.quantite ge ligne.produit.stock}"
+                                                 process="@this"/>
+                            </div>
+                        </div>
+
+                        <!-- Subtotal -->
+                        <div class="subtotal price-col">
+                            <h:outputText value="#{ligne.prixTotal}">
+                                <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                            </h:outputText> DH
+                        </div>
+
+                        <!-- Remove -->
+                        <div class="remove-col">
+                            <p:commandLink action="#{panierBean.supprimerLigne(ligne)}"
+                                           update="cartForm"
+                                           styleClass="remove-btn"
+                                           onclick="return confirm('Supprimer cet article ?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </p:commandLink>
+                        </div>
+                    </div>
+                </ui:repeat>
+
+                <!-- Summary -->
+                <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Sous-total (#{panierBean.nombreArticles} article(s))</span>
+                        <span>
+                            <h:outputText value="#{panierBean.panierCourant.total}">
+                                <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                            </h:outputText> DH
+                        </span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Livraison</span>
+                        <span>Gratuite</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total à payer</span>
+                        <span style="color:#e91e63;">
+                            <h:outputText value="#{panierBean.panierCourant.total}">
+                                <f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                            </h:outputText> DH
+                        </span>
+                    </div>
+
+                    <p:commandButton value="Passer la commande"
+                                     action="#{panierBean.validerCommande}"
+                                     styleClass="checkout-btn"
+                                     icon="fas fa-credit-card"
+                                     onclick="return confirm('Confirmer la commande ?')"/>
+                </div>
+
+                <div class="continue-shopping">
+                    <p:button value="Continuer les achats"
+                              outcome="/vitrine.xhtml"
+                              styleClass="p-button p-button-text"
+                              icon="fas fa-store"/>
+                </div>
+            </h:form>
+        </ui:fragment>
+    </div>
+
+    <!-- Growl -->
+    <p:growl id="growl" showDetail="true" life="4000"/>
+</h:body>
+</html>

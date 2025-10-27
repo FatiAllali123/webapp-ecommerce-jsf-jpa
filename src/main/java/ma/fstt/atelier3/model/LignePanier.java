@@ -38,7 +38,7 @@ public class LignePanier {
     }
 
     // Ligne paniere<-> panier
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_panier")
     private Panier panier;
 

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+    <!-- Lien Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <h:outputStylesheet>
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        }
+
+
+        nav {
+        width: 100%;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 60px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        }
+
+
+        .logo {
+        font-size: 28px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        }
+
+        .logo::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #9c27b0, #e91e63);
+        transition: width 0.3s ease;
+        }
+
+        .logo:hover::after {
+        width: 100%;
+        }
+
+        .logo:hover {
+        transform: scale(1.05);
+        }
+
+        /* Container des boutons */
+        .nav-buttons {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        }
+
+        .nav-buttons form {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        }
+
+
+        .nav-buttons button,
+        .nav-buttons .ui-button {
+        background: rgba(156, 39, 176, 0.1) !important;
+        background-image: none !important;
+        border: 2px solid #9c27b0 !important;
+        color: #ffffff !important;
+        padding: 10px 24px !important;
+        border-radius: 25px !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        font-size: 14px !important;
+        font-family: "Poppins", sans-serif !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        box-shadow: 0 2px 10px rgba(156, 39, 176, 0.2) !important;
+        position: relative !important;
+        overflow: hidden !important;
+        }
+
+        /* Effet de brillance au survol */
+        .nav-buttons button::before,
+        .nav-buttons .ui-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s ease;
+        }
+
+        .nav-buttons button:hover::before,
+        .nav-buttons .ui-button:hover::before {
+        left: 100%;
+        }
+
+        /* Hover state */
+        .nav-buttons button:hover,
+        .nav-buttons .ui-button:hover {
+        background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important;
+        color: #fff !important;
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(156, 39, 176, 0.5) !important;
+        border-color: #e91e63 !important;
+        }
+
+        /* Active state */
+        .nav-buttons button:active,
+        .nav-buttons .ui-button:active {
+        transform: translateY(-1px) scale(0.98);
+        }
+
+        /* Style du texte */
+        .nav-buttons .ui-button-text {
+        padding: 0 !important;
+        color: white !important;
+        font-weight: 500 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        }
+
+        .nav-buttons .ui-button:hover .ui-button-text {
+        color: white !important;
+        }
+
+        /* Style pour les icônes */
+        .nav-buttons i {
+        font-size: 16px;
+        transition: transform 0.3s ease;
+        }
+
+        .nav-buttons button:hover i,
+        .nav-buttons .ui-button:hover i {
+        transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Style spécial pour le bouton de déconnexion */
+        .nav-buttons .logout-btn {
+        border-color: #f44336 !important;
+        background: rgba(244, 67, 54, 0.1) !important;
+        }
+
+        .nav-buttons .logout-btn:hover {
+        background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%) !important;
+        border-color: #f44336 !important;
+        box-shadow: 0 8px 25px rgba(244, 67, 54, 0.5) !important;
+        }
+
+        /* Animation pulse pour attirer l'attention */
+        @keyframes pulse {
+        0%, 100% {
+        box-shadow: 0 2px 10px rgba(156, 39, 176, 0.2);
+        }
+        50% {
+        box-shadow: 0 4px 20px rgba(156, 39, 176, 0.4);
+        }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+        nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+        }
+
+        .logo {
+        font-size: 24px;
+        }
+
+        .nav-buttons form {
+        flex-wrap: wrap;
+        justify-content: center;
+        }
+
+        .nav-buttons button,
+        .nav-buttons .ui-button {
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+        }
+        }
+
+        /* Animation d'entrée */
+        nav {
+        animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+        from {
+        transform: translateY(-100%);
+        opacity: 0;
+        }
+        to {
+        transform: translateY(0);
+        opacity: 1;
+        }
+        }
+    </h:outputStylesheet>
+
+
+    <nav>
+        <div class="logo">✨ Trendio</div>
+
+        <div class="nav-buttons">
+            <!-- SI CONNECTÉ -->
+            <ui:fragment rendered="#{iternauteBean.loggedIn}">
+                <!-- Formulaire pour Mon Profil -->
+                <h:form>
+                    <p:commandButton value="Mon Profil"
+                                     action="#{iternauteBean.voirProfil(iternauteBean.currentUser)}"
+                                     styleClass="nav-btn"
+                                     icon="fas fa-user-circle"/>
+                </h:form>
+
+                <!-- SI ADMIN -->
+                <ui:fragment rendered="#{iternauteBean.isAdmin}">
+                    <p:button value="Dashboard" styleClass="nav-btn" icon="fas fa-chart-line" outcome="/dashboard.xhtml"/>
+                </ui:fragment>
+
+                <!-- USER -->
+                <ui:fragment rendered="#{iternauteBean.isUser}">
+                    <!-- Formulaire séparé pour Panier -->
+                    <p:button value="Panier"
+                              outcome="/Panier/panier.xhtml"
+                              styleClass="nav-btn"
+                              icon="fas fa-shopping-bag"/>
+                    <p:button value="Mes Commandes" styleClass="nav-btn" icon="fas fa-box-open"  outcome="/commande/liste.xhtml"/>
+                </ui:fragment>
+
+                <!-- Formulaire séparé pour Déconnexion -->
+                <h:form>
+                    <p:commandButton value="Déconnexion"
+                                     action="#{iternauteBean.logout}"
+                                     styleClass="nav-btn logout-btn"
+                                     ajax="false"
+                                     icon="fas fa-sign-out-alt"/>
+                </h:form>
+            </ui:fragment>
+
+            <!-- SI PAS CONNECTÉ -->
+            <ui:fragment rendered="#{!iternauteBean.loggedIn}">
+                <p:button value="Connexion" styleClass="nav-btn" icon="fas fa-sign-in-alt" outcome="/Internaute/login"/>
+                <p:button value="Inscription" styleClass="nav-btn" icon="fas fa-user-plus" outcome="/Internaute/signup"/>
+            </ui:fragment>
+        </div>
+    </nav>
+</ui:composition>
+
+</html>

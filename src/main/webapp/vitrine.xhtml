@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui"
+      lang="fr">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nos Produits - LSI Ecommerce</title>
+
+    <!-- Font Awesome -->
+    <h:outputLink value="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" type="text/css"/>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+
+        /* === HEADER VITRINE === */
+        .vitrine-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #a328b8 0%, #6a1b9a 100%);
+            color: white;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vitrine-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .vitrine-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+        }
+
+        .vitrine-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+        }
+
+        .vitrine-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === CONTAINER === */
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* === PRODUCTS COUNT === */
+        .products-count {
+            font-size: 1.2rem;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 1rem 0;
+            text-align: center;
+            display: block;
+        }
+
+        /* === PRODUCTS GRID === */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+            padding: 1rem 0;
+        }
+
+        /* === PRODUCT CARD === */
+        .product-card {
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(156, 39, 176, 0.2) !important;
+        }
+
+        /* === IMAGE CONTAINER - FIX PRINCIPAL === */
+        .product-image-container {
+            height: 280px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* FIX: Image s'adapte complètement au container */
+        .product-image {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.08);
+        }
+
+        /* === PRODUCT INFO === */
+        .product-info {
+            padding: 2rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* === PRICE === */
+        .product-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #e91e63;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .product-old-price {
+            font-size: 1.1rem;
+            color: #95a5a6;
+            text-decoration: line-through;
+            font-weight: 500;
+        }
+
+        /* === STOCK INFO === */
+        .stock-info {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: #27ae60;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.8rem;
+            background: #d4edda;
+            border-radius: 8px;
+            width: fit-content;
+        }
+
+        .stock-info::before {
+            content: '✓';
+            font-weight: bold;
+            color: #155724;
+        }
+
+        /* === BADGE === */
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 3;
+            font-size: 0.8rem;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* === BUTTON === */
+        .product-info .ui-button {
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 14px 28px !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+            margin-top: auto;
+            box-shadow: 0 6px 20px rgba(156, 39, 176, 0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.6rem !important;
+        }
+
+        .product-info .ui-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.5) !important;
+        }
+
+        .product-info .ui-button i {
+            font-size: 1.1rem;
+        }
+
+        /* === EMPTY STATE === */
+        .empty-state {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: #7f8c8d;
+            background: white;
+            border-radius: 20px;
+            margin: 2rem 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .empty-state::before {
+            content: '🛒';
+            display: block;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .empty-state .ui-button {
+            background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 14px 28px !important;
+            border-radius: 12px !important;
+            font-weight: 700 !important;
+        }
+
+        /* === MESSAGES === */
+        .ui-messages {
+            margin-bottom: 2rem;
+            border-radius: 12px;
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            .vitrine-header h1 {
+                font-size: 2rem;
+            }
+
+            .vitrine-header p {
+                font-size: 1rem;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .product-image-container {
+                height: 220px;
+                padding: 1rem;
+            }
+
+            .product-info {
+                padding: 1.5rem;
+            }
+
+            .product-title {
+                font-size: 1.1rem;
+            }
+
+            .product-price {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Inclusion Navbar -->
+    <ui:include src="/navbar.xhtml"/>
+
+    <!-- En-tête Vitrine -->
+    <section class="vitrine-header">
+        <h1>✨ Nos Produits</h1>
+        <p>Découvrez notre sélection exclusive de produits de qualité</p>
+    </section>
+
+    <!-- Produits -->
+    <div class="container">
+        <div class="products-header">
+            <h:outputText value="#{produitBean.allproduits.size()} produit(s) trouvé(s)" styleClass="products-count"/>
+        </div>
+
+        <!-- Messages -->
+        <p:messages autoUpdate="true" closable="true"/>
+
+        <!-- Grille Produits -->
+        <ui:fragment rendered="#{not empty produitBean.allproduits}">
+            <div class="products-grid">
+                <ui:repeat value="#{produitBean.allproduits}" var="p">
+                    <div class="product-card">
+                        <!-- Badge Premium -->
+                        <ui:fragment rendered="#{p.prixUnitaire > 700}">
+                            <div class="product-badge">Premium</div>
+                        </ui:fragment>
+
+                        <!-- Image - FIX appliqué -->
+                        <div class="product-image-container">
+                            <p:graphicImage value="/images/#{p.image}"
+                                            alt="#{p.designation}"
+                                            styleClass="product-image"/>
+                        </div>
+
+                        <div class="product-info">
+                            <h:outputText value="#{p.designation}" styleClass="product-title"/>
+
+                            <!-- Prix -->
+                            <div class="product-price">
+                                <ui:fragment rendered="#{p.prixUnitaire > 700}">
+                                    <span class="product-old-price">
+                                        <h:outputText value="#{p.prixUnitaire * 1.2}">
+                                            <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                                        </h:outputText> DH
+                                    </span>
+                                </ui:fragment>
+                                <h:outputText value="#{p.prixUnitaire}">
+                                    <f:convertNumber maxFractionDigits="2" minFractionDigits="2"/>
+                                </h:outputText> DH
+                            </div>
+
+                            <!-- Stock -->
+                            <ui:fragment rendered="#{p.stock > 0}">
+                                <div class="stock-info">En stock</div>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{p.stock == 0}">
+                                <div class="stock-info" style="background: #f8d7da; color: #721c24;">
+                                    <i class="fas fa-times-circle"></i> Rupture de stock
+                                </div>
+                            </ui:fragment>
+
+                            <!-- Bouton -->
+                            <p:button value="Voir le produit"
+                                      outcome="/Produit/Details.xhtml"
+                                      icon="pi pi-eye">
+                                <f:param name="id" value="#{p.id}"/>
+                            </p:button>
+                        </div>
+                    </div>
+                </ui:repeat>
+            </div>
+        </ui:fragment>
+
+        <!-- État vide -->
+        <ui:fragment rendered="#{empty produitBean.allproduits}">
+            <div class="empty-state">
+                <h3>Aucun produit disponible</h3>
+                <p>Nous n'avons trouvé aucun produit correspondant à vos critères.</p>
+                <p:button value="Actualiser" outcome="/vitrine.xhtml" icon="pi pi-refresh"/>
+            </div>
+        </ui:fragment>
+    </div>
+</h:body>
+</html>
